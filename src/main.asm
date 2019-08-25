@@ -15,29 +15,11 @@ SECTION "Game code", ROM0
 Start:
     ; Turn off the LCD
     call WaitVBlank
+    call TurnOffLCD
 
-    xor a ; ld a, 0 ; We only need to reset a value with bit 7 reset, but 0 does the job
-    ld [rLCDC], a ; We will have to write to LCDC again later, so it's not a bother, really.
-
-    ld hl, $9000
-    ld de, FontTiles
-    ld bc, FontTilesEnd - FontTiles
-.copyFont
-    ld a, [de] ; Grab 1 byte from the source
-    ld [hli], a ; Place it at the destination, incrementing hl
-    inc de ; Move to next byte
-    dec bc ; Decrement count
-    ld a, b ; Check if count is 0, since `dec bc` doesn't update flags
-    or c
-    jr nz, .copyFont
-    ld hl, $9802 ; This will print the string at the top-left corner of the screen
-    ld de, HelloWorldStr
-.copyString
-    ld a, [de]
-    ld [hli], a
-    inc de
-    and a ; Check if the byte we just copied is zero
-    jr nz, .copyString ; Continue if it's not
+    ; Prepare VRAM
+    call CopyFont
+    call CopyText
 
     call InitDisplayReg
     call InitScreenPos
@@ -64,11 +46,40 @@ Start:
 
 ; FUNCTIONS
 
+TurnOffLCD:
+    xor a ; ld a, 0 ; We only need to reset a value with bit 7 reset, but 0 does the job
+    ld [rLCDC], a ; We will have to write to LCDC again later, so it's not a bother, really.
+    ret
+
+CopyText:
+    ld hl, $9800 + 2
+    ld de, HelloWorldStr
+    ld bc, HelloWorldStrEnd - HelloWorldStr
+    call MemCopy
+    ret
+
+CopyFont:
+    ld hl, $9000
+    ld de, FontTiles
+    ld bc, FontTilesEnd - FontTiles
+    call MemCopy
+    ret
+
+MemCopy:
+    ld a, [de] ; Grab 1 byte from the source
+    ld [hli], a ; Place it at the destination, incrementing hl
+    inc de ; Move to next byte
+    dec bc ; Decrement count
+    ld a, b ; Check if count is 0, since `dec bc` doesn't update flags
+    or c
+    jr nz, MemCopy
+    ret
+
 InitDisplayReg:
     ld a, %11100100
     ld [rBGP], a
     ret
-    
+
 ShutSoundDown:
     xor a
     ld [rNR52], a
@@ -95,4 +106,5 @@ FontTilesEnd:
 SECTION "Hello World string", ROM0
 
 HelloWorldStr:
-    db "GENESIS HOODLUM", 0
+    db "GENESIS HOODLUM"
+HelloWorldStrEnd:
