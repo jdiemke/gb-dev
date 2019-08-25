@@ -1,35 +1,16 @@
-INCLUDE "./hardware.inc"
+INCLUDE "/include/gb_hardware.inc"
+INCLUDE "/include/entry_point.inc"
+INCLUDE "/include/header.inc"
 
-SECTION "Header", ROM0[$100] ; I'm repeating this line so you know where we are. Don't write it twice!
+SECTION "Main", ROM0
 
-EntryPoint: ; This is where execution begins
-    di ; Disable interrupts. That way we can avoid dealing with them, especially since we didn't talk about them yet :p
-    jp Start ; Again, I'm repeating this line, but you shouldn't
-
-REPT $150 - $104
-    db 0
-ENDR
-
-SECTION "Game code", ROM0
-
-Start:
-    ; Turn off the LCD
-    call WaitVBlank
+Main:
+    ; SETUP PROCESS
     call TurnOffLCD
+    call SetupDemo
+    call TurnOnLCD
 
-    ; Prepare VRAM
-    call CopyFont
-    call CopyText
-
-    call InitDisplayReg
-    call InitScreenPos
-    call ShutSoundDown
-
-    ; Turn screen on, display background
-    ld a, %10000001
-    ld [rLCDC], a
-
-    ; Lock up
+    ; MAIN LOOP
     ld b, -50
     ld c, 0
 .main_loop
@@ -46,7 +27,21 @@ Start:
 
 ; FUNCTIONS
 
+TurnOnLCD:
+    ld a, %10000001
+    ld [rLCDC], a
+    ret
+
+SetupDemo:
+    call CopyFont
+    call CopyText
+    call InitDisplayReg
+    call InitScreenPos
+    call ShutSoundDown
+    ret
+
 TurnOffLCD:
+    call WaitVBlank
     xor a ; ld a, 0 ; We only need to reset a value with bit 7 reset, but 0 does the job
     ld [rLCDC], a ; We will have to write to LCDC again later, so it's not a bother, really.
     ret

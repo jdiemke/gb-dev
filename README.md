@@ -10,6 +10,7 @@ A Game Boy Development Playground
 
 ## References
 
+* https://gb-archive.github.io/salvage/tutorial_de_ensamblador/tutorial_de_ensamblador%20%5BLa%20decadence%5D.html
 * https://github.com/gbdev/awesome-gbdev
 * http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 * https://eldred.fr/gb-asm-tutorial/
@@ -17,3 +18,6 @@ A Game Boy Development Playground
 * http://peterwynroberts.com/?p=10
 * https://www.youtube.com/watch?v=HyzD8pNlpwI
 * http://slashbinbash.de/gbdev.html
+* http://devrs.com/gb/
+* https://github.com/bitnenfer/flappy-boy-asm
+* http://voidptr.io/blog/2017/01/21/GameBoy.html
