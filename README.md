@@ -11,6 +11,7 @@ A Game Boy Development Playground
 ## References
 
 * https://github.com/gbdev/awesome-gbdev
+* http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 * https://eldred.fr/gb-asm-tutorial/
 * http://gameboy.mongenel.com/asmschool.html
 * http://peterwynroberts.com/?p=10

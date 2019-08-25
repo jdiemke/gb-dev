@@ -14,15 +14,12 @@ SECTION "Game code", ROM0
 
 Start:
     ; Turn off the LCD
-.waitVBlank
-    ld a, [rLY]
-    cp 144 ; Check if the LCD is past VBlank
-    jr c, .waitVBlank
+    call WaitVBlank
 
     xor a ; ld a, 0 ; We only need to reset a value with bit 7 reset, but 0 does the job
     ld [rLCDC], a ; We will have to write to LCDC again later, so it's not a bother, really.
 
-        ld hl, $9000
+    ld hl, $9000
     ld de, FontTiles
     ld bc, FontTilesEnd - FontTiles
 .copyFont
@@ -33,8 +30,7 @@ Start:
     ld a, b ; Check if count is 0, since `dec bc` doesn't update flags
     or c
     jr nz, .copyFont
-
-        ld hl, $9800 ; This will print the string at the top-left corner of the screen
+    ld hl, $9802 ; This will print the string at the top-left corner of the screen
     ld de, HelloWorldStr
 .copyString
     ld a, [de]
@@ -43,26 +39,54 @@ Start:
     and a ; Check if the byte we just copied is zero
     jr nz, .copyString ; Continue if it's not
 
-        ; Init display registers
-    ld a, %11100100
-    ld [rBGP], a
-
-    xor a ; ld a, 0
-    ld [rSCY], a
-    ld [rSCX], a
-
-    ; Shut sound down
-    ld [rNR52], a
+    call InitDisplayReg
+    call InitScreenPos
+    call ShutSoundDown
 
     ; Turn screen on, display background
     ld a, %10000001
     ld [rLCDC], a
 
-        ; Lock up
-.lockup
-    jr .lockup
+    ; Lock up
+    ld b, -50
+    ld c, 0
+.main_loop
+    call WaitVBlank
+    inc c
+    ld a, c
+    cp a, 9
+    jp nz, .main_loop
+    ld c, 0
+    inc b
+    ld a, b
+    ld [rSCY], a
+    jr .main_loop
 
-    SECTION "Font", ROM0
+; FUNCTIONS
+
+InitDisplayReg:
+    ld a, %11100100
+    ld [rBGP], a
+    ret
+    
+ShutSoundDown:
+    xor a
+    ld [rNR52], a
+    ret
+
+InitScreenPos:
+    xor a
+    ld [rSCY], a
+    ld [rSCX], a
+    ret
+
+WaitVBlank:
+    ld a, [rLY]
+    cp 144
+    jr nz, WaitVBlank
+    ret
+
+SECTION "Font", ROM0
 
 FontTiles:
 INCBIN "assets/font.chr"
