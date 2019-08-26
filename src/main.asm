@@ -17,7 +17,7 @@ Main:
     call WaitVBlank
     inc c
     ld a, c
-    cp a, 9
+    cp a, 14
     jp nz, .main_loop
     ld c, 0
     inc b
@@ -33,8 +33,15 @@ TurnOnLCD:
     ret
 
 SetupDemo:
-    call CopyFont
-    call CopyText
+    ;call CopyFont
+    ;call CopyText
+    ld hl, $9000
+    ld de, TileData
+    ld bc, 128 * 16 ; 128 is number of tiles
+    call MemCopy
+
+    call MemCopy2
+
     call InitDisplayReg
     call InitScreenPos
     call ShutSoundDown
@@ -70,6 +77,29 @@ MemCopy:
     jr nz, MemCopy
     ret
 
+MemCopy2:
+    ld hl, $9800
+    ld de, MapData
+    ld a, 18
+.loop:
+    ld bc, 20
+    push af
+.row:
+    ld a, [de] ; Grab 1 byte from the source
+    ld [hli], a ; Place it at the destination, incrementing hl
+    inc de ; Move to next byte
+    dec bc ; Decrement count
+    ld a, b ; Check if count is 0, since `dec bc` doesn't update flags
+    or c
+    jr nz, .row
+    ld bc, 12
+    add hl, bc
+    pop af
+    dec a
+
+    jr nz, .loop
+    ret
+
 InitDisplayReg:
     ld a, %11100100
     ld [rBGP], a
@@ -103,3 +133,8 @@ SECTION "Hello World string", ROM0
 HelloWorldStr:
     db "GENESIS HOODLUM"
 HelloWorldStrEnd:
+
+SECTION "LOGO", ROM0
+
+INCLUDE "./logo_tiles.Z80"
+INCLUDE "./logo_tiles_map.Z80"
