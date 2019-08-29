@@ -1,4 +1,5 @@
-INCLUDE "/include/gb_hardware.inc"
+;INCLUDE "/include/gb_hardware.inc"
+INCLUDE "/include/hardware.inc"
 INCLUDE "/include/entry_point.inc"
 INCLUDE "/include/header.inc"
 
@@ -10,15 +11,21 @@ Main:
     call SetupDemo
     call TurnOnLCD
 
+    call InitPlayer
+   
     ; MAIN LOOP
     ld b, -50
     ld c, 0
 .main_loop
     call WaitVBlank
+    call PlayMusic
     inc c
     ld a, c
     cp a, 14
     jp nz, .main_loop
+
+
+
     ld c, 0
     inc b
     ld a, b
@@ -26,6 +33,55 @@ Main:
     jr .main_loop
 
 ; FUNCTIONS
+
+InitPlayer:
+    ; Init Speed
+    ld HL, speed
+    ld [HL], 100
+
+    ; Init Ticks
+    ld HL, ticks
+    ld [HL], 0
+
+    ret
+
+PlayMusic:
+    push bc
+
+    ld hl, ticks
+    ld b, [hl]
+    ld a, [speed]
+    inc b
+    ld [hl], b
+
+    cp	a,b
+	jr	z,.dontexit
+
+    pop bc
+    ret
+
+.dontexit:
+    ; Reset Ticks
+    ld [hl], 0
+    ; TODO: load next pattern and play on channels
+    ; sound
+    ld a, $4F
+    ld [rNR10], a
+
+    ld a, $96
+    ld [rNR11], a
+
+    ld a, $B7
+    ld [rNR12], a
+
+    ld a, $BB
+    ld [rNR13], a
+
+    ld a, $85
+    ld [rNR14], a
+
+    pop bc
+    ret
 
 TurnOnLCD:
     ld a, %10000001
@@ -44,7 +100,7 @@ SetupDemo:
 
     call InitDisplayReg
     call InitScreenPos
-    call ShutSoundDown
+    ;call ShutSoundDown
     ret
 
 TurnOffLCD:
@@ -121,6 +177,14 @@ WaitVBlank:
     cp 144
     jr nz, WaitVBlank
     ret
+
+SECTION "Music Player", wram0
+
+speed:
+    DS 1
+
+ticks:
+    DS 1
 
 SECTION "Font", ROM0
 
