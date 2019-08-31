@@ -10,7 +10,7 @@ A Game Boy Development Playground
 
 ## DMG Programming Guide
 
-This repository contains a [Short DMG Programming Crash Course](PROGRAMMING.MD).
+This repository contains a [Short DMG Programming Crash Course](PROGRAMMING.md).
 
 ## References
 
