@@ -7,6 +7,7 @@ SECTION "Main", ROM0
 
 Main:
     ; SETUP PROCESS
+    call DisableInterrupts
     call TurnOffLCD
     call SetupDemo
     call TurnOnLCD
@@ -34,13 +35,21 @@ Main:
 
 ; FUNCTIONS
 
+DisableInterrupts:
+    di
+    ret
+
 InitPlayer:
     ; Init Speed
     ld HL, speed
-    ld [HL], 100
+    ld [HL], 60
 
     ; Init Ticks
     ld HL, ticks
+    ld [HL], 0
+
+    ; Init Pos
+    ld HL, pos
     ld [HL], 0
 
     ret
@@ -65,6 +74,19 @@ PlayMusic:
     ld [hl], 0
     ; TODO: load next pattern and play on channels
     ; sound
+    ld hl, pos
+    ld e, [hl]
+    ld d, 0
+    ld hl,Track             ; HL points to the first element of the array
+    add hl,de                      ; The address of the DEth element: HL + DE = ArrayAddress + Index
+  
+    ld a,[hl]                    ; We have the element in the accumulator
+
+    ld b,1
+    cp a, b
+    jr z, .play
+    jr .incr
+.play:
     ld a, $4F
     ld [rNR10], a
 
@@ -79,6 +101,21 @@ PlayMusic:
 
     ld a, $85
     ld [rNR14], a
+.incr:
+    ld hl,pos
+    ld b,[hl]
+    inc b
+    ld [hl], b
+    ld a, 16
+    cp b
+    jr z, .reset
+    pop bc
+    ret
+.reset:
+    ld b, 0
+    ld [hl], b
+
+    
 
     pop bc
     ret
@@ -185,6 +222,13 @@ speed:
 
 ticks:
     DS 1
+pos:
+    DS 1
+
+SECTION "Tune", rom0
+
+Track:
+    db 1,1,0,0,1,0,1,0,1,0,0,1,1,0,1,0
 
 SECTION "Font", ROM0
 

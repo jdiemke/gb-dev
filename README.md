@@ -8,6 +8,10 @@ A Game Boy Development Playground
   *  RGBDS GBZ80 VSCode Extension
 *  BGB GameBoy Emulator / Debugger
 
+## DMG Programming Guide
+
+This repository contains a [Short DMG Programming Crash Course](PROGRAMMING.MD).
+
 ## References
 
 * https://gb-archive.github.io/salvage/tutorial_de_ensamblador/tutorial_de_ensamblador%20%5BLa%20decadence%5D.html
