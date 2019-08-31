@@ -1,4 +1,4 @@
-# DMG Programming
+# DMG Programming Basics
 
 ## Registers
 
@@ -35,13 +35,38 @@ LD A, B
 
 ## Immediate Loading of Registers
 
-Data can be loaded directly into:
+Specific fixed values can be loaded directly into one of the registers:
 
-`A, B, C, D, E, H, L`
+`A, B, C, D, E, H, L, SP, PC`
 
 This is done using the `LD` instruction:
 
-`LD C, 3`
+```assembly
+LD C, 3
+LD C, $FF
+LD DE, $FF80
+```
 
-...
-`LD A, [HL]`
+## Direct Loading of Registers
+
+The Registers `A, BC, DE, HL, SP` can be loaded directly from memory (direct addressing):
+
+```assembly
+LD A, [$3FFF]
+```
+
+## Indirect Loading of Registers
+
+Indirect loading allows to load any 8-bit register from the address contained in the 16-bit register `HL`:
+
+```assembly
+LD D, [HL]
+```
+
+The register `A` can also be loaded from the 16-bit registers `BC, DE`:
+
+```assembly
+LD A, [BC]
+```
+
+It is important to note that 16-bit register pairs can not be loeader indirectly!
