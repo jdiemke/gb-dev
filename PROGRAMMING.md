@@ -24,6 +24,15 @@ Most of these registers have a special purpose:
 * `SP` is the stack pointer
 * `PC` is the program counter
 
+## Loading Register from Register
+
+The `LD` instruction can load any of the registers `A, B, C, D, E, H, L`
+into any other of these registers:
+
+```assembly
+LD A, B
+```
+
 ## Immediate Loading of Registers
 
 Data can be loaded directly into:
@@ -33,3 +42,6 @@ Data can be loaded directly into:
 This is done using the `LD` instruction:
 
 `LD C, 3`
+
+...
+`LD A, [HL]`
