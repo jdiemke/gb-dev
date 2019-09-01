@@ -1,5 +1,7 @@
 # DMG Programming Basics
 
+The GameBoy (DMG) CPU is based on a subset of the Z80 processor.
+
 ## Registers
 
 We have 8 8-bit registers:
@@ -93,6 +95,24 @@ as follows:
     LD [HL], $6F
 ```
 
+### Automatic Increment and Decrement
+
+When using `HL` for indirect loading into or storing to register `A` the `LDI` opcode
+can be used to automatically increment the address inside `HL` after the loading took place:
+
+```assembly
+    LDI A, [HL]
+    LDI [HL], A
+```
+
+There is also a version that decrements `HL`:
+
+```assembly
+    LDD A, [HL]
+    LDD [HL], A
+```
+
+
 ## Indexed Access to Data
 
 ### The General Solution
@@ -125,4 +145,6 @@ This version is approx. 2 times faster than the genral solution to indexd access
 
 ## References
 
+* http://www.devrs.com/gb/files/opcodes.html
+* http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 * http://forums.nesdev.com/viewtopic.php?p=177418#p177418
