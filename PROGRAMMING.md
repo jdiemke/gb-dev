@@ -97,6 +97,9 @@ as follows:
 
 ### The General Solution
 
+Given an Array of bytes starting at address `ArrayAddress` that contains up to 256 bytes it is possible to
+access each byte by an index `Index` using the following code:
+
 ```assembly
     LD HL, ArrayAddress
     LD A, Index
