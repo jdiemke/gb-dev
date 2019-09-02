@@ -199,9 +199,65 @@ A neat trick is to align data (thats is less than 256 bytes) to pages. This mean
 
 This version is approx. 2 times faster than the genral solution to indexd access!
 
+## Read Button State
+
+The button state is located at $FF00. 
+Normally bit 4 and 5 are set to 1. Setting them to 0 
+will make the bits 0 to 3 become set or unset depending
+on which buttons are pressed. When bit 5 is set to 0
+the bits 0 to 3 will have the follwing meaning:
+
+| bit | button |
+| --- | ------ |
+| 0   | right  |
+| 1   | left   |
+| 2   | up     |
+| 3   | down   |
+
+When bit 4 is set to 0 the bits 0 to 3 will have the follwing meaning:
+
+| bit | button |
+| --- | ------ |
+| 0   | A      |
+| 1   | B      |
+| 2   | Select |
+| 3   | Start  |
+
+Example code to read all 8 button states into register A is given below:
+
+```assembly
+    LD A, %00100000
+    LD [$FF00], A
+
+    ; debounce
+    LD A, [$FF00]
+    LD A, [$FF00]
+
+    CPL
+
+    AND %00001111
+    SWAP A
+    LD B, A
+    LD A, %00010000
+    LD [$FF00], A
+
+    ; debounce
+    LD A, [$FF00]
+    LD A, [$FF00]
+    LD A, [$FF00]
+    LD A, [$FF00]
+    LD A, [$FF00]
+    LD A, [$FF00]
+
+    CPL
+    AND %00001111
+    OR B
+```
+
 ## References
 
 * http://www.devrs.com/gb/files/opcodes.html
+* https://raw.githubusercontent.com/jansegre/gameboy/master/spec/gbspec.txt
 * http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 * http://forums.nesdev.com/viewtopic.php?p=177418#p177418
 * https://forums.nesdev.com/viewtopic.php?f=20&t=14691
