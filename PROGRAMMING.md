@@ -2,6 +2,21 @@
 
 The GameBoy (DMG) CPU is based on a subset of the Z80 processor.
 
+## Memory Layout
+
+Memory in the Game Boy is memory mapped and has the following layout:
+
+| Address Space | Description                            |
+| ------------- | -------------------------------------- |
+| 0000 - 7FFF   | Cartridge 32KB                         |
+| 8000 - 9FFF   | VRAM 8KB (Tiles and Background Layer)  |
+| A000 - BFFF   | External Ram (XRAM) 8KB (Save Games)   |
+| C000 - DFFF   | Work Ram (WRAM) 8KB                    |
+| FE00 - FE9F   | Object Attribute Memory (OAM, Sprites) |
+| FF00 - FF7F   | I/O Registers                          |
+| FF80 - FFFE   | Hight RAM (HRAM)                       |
+| FFFF          | Interrupt Switch                       |
+
 ## Registers
 
 We have 8 8-bit registers:
@@ -112,6 +127,47 @@ There is also a version that decrements `HL`:
     LDD [HL], A
 ```
 
+## Arithmetic
+
+### Add instruction
+
+```assembly
+ADD A, register
+ADD A, immediate data
+ADD A, [HL]
+```
+
+### Add with Carry instruction
+
+```assembly
+ADC A, register
+ADC A, immediate data
+ADC A, [HL]
+```
+
+### Sub instruction
+
+```assembly
+SUB register
+SUB immediate data
+SUB [HL]
+```
+
+### Sub with Carry instruction
+
+```assembly
+SBC A, register
+SBC A, immediate data
+SBC A, [HL]
+```
+
+### AND instruction
+
+```assembly
+AND register
+AND immediate data
+AND [HL]
+```
 
 ## Indexed Access to Data
 
@@ -148,3 +204,4 @@ This version is approx. 2 times faster than the genral solution to indexd access
 * http://www.devrs.com/gb/files/opcodes.html
 * http://marc.rawer.de/Gameboy/Docs/GBCPUman.pdf
 * http://forums.nesdev.com/viewtopic.php?p=177418#p177418
+* https://forums.nesdev.com/viewtopic.php?f=20&t=14691
