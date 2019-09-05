@@ -1,0 +1,5 @@
+SECTION "HEADER", ROM0[$104]
+
+REPT $150 - $104
+    db 0
+ENDR
