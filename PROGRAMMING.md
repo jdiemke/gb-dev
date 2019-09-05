@@ -41,6 +41,9 @@ Most of these registers have a special purpose:
 * `SP` is the stack pointer
 * `PC` is the program counter
 
+HINT: Instead of using a 8-bit register in an opcode you can
+always use [hl] instead.
+
 ## The LD opcode
 
 The general structure of the LD opcode is as follows:
@@ -253,6 +256,10 @@ Example code to read all 8 button states into register A is given below:
     AND %00001111
     OR B
 ```
+
+## Bank Switching
+
+*TBD!*
 
 ## References
 
