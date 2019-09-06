@@ -13,7 +13,6 @@ SECTION	"LCDC", ROM0[$0048]
 SECTION "Main", ROM0
 
 Main:
-    ; SETUP PROCESS
     call DisableInterrupts
     call TurnOffLCD
     call SetupDemo
@@ -21,16 +20,27 @@ Main:
    
     call EnableVBLInterrupt
     call EnableInterrupts
+    call EnableHBlankInterrupt
 
-    ld      a,%00001000 ; enable hblank interrupts of LCD interrups
-    ld      [$ff41], a
     ld b, 0
 .main_loop
-    halt ; https://gbdev.gg8.se/wiki/articles/Reducing_Power_Consumption
-    
+    call EnterLowPowerMode
     jr .main_loop
 
 ; FUNCTIONS
+
+EnableHBlankInterrupt:
+    ld      a,%00001000 ; enable hblank interrupts of LCD interrups
+    ld      [$ff41], a
+    ret
+
+; https://gbdev.gg8.se/wiki/articles/Reducing_Power_Consumption
+; https://www.reddit.com/r/EmuDev/comments/5bfb2t/a_subtlety_about_the_gameboy_z80_halt_instruction/
+; http://www.devrs.com/gb/files/gbspec.txt
+EnterLowPowerMode:
+    halt
+    nop
+    ret
 
 Wobble:
     ld A, [rLY]
