@@ -1,0 +1,6 @@
+rLY     EQU $FF44
+rSCY    EQU $FF42
+rSCX    EQU $FF43
+rNR52   EQU $FF26
+rBGP    EQU $FF47
+rLCDC   EQU $FF40

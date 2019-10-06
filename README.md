@@ -38,3 +38,4 @@ This repository contains a [Short DMG Programming Crash Course](PROGRAMMING.md).
 * https://github.com/DevEd2/Deflemask2GB
 * https://github.com/DevEd2/DevSound
 * https://upcommons.upc.edu/bitstream/handle/2117/109328/126661.pdf?sequence=1&isAllowed=y
+* http://www.devrs.com/gb/files/gbspec.txt

@@ -1,0 +1,25 @@
+; RST Handlers
+
+SECTION "RST 00", ROM0[$0000]
+    ret
+
+SECTION "RST 08", ROM0[$0008]
+    ret
+
+SECTION "RST 10", ROM0[$0010]
+    ret
+
+SECTION "RST 18", ROM0[$0018]
+    ret
+
+SECTION "RST 20", ROM0[$0020]
+    ret
+
+SECTION "RST 28", ROM0[$0028]
+    ret
+
+SECTION "RST 30", ROM0[$0030]
+    ret
+
+SECTION "RST 38", ROM0[$0038]
+    ret
